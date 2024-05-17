@@ -17,12 +17,13 @@ public class ApiRestApplication {
         SpringApplication.run(ApiRestApplication.class, args);
     }
 
+    /*
     @PostConstruct
     private void postConstruct(){
         Usuario usu = new Usuario("carre@carre.com","carre");
         usuService.registrar(usu);
     }
-    
+    */
     
      
         
