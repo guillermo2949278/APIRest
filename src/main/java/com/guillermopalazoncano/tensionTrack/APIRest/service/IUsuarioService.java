@@ -5,6 +5,7 @@
 package com.guillermopalazoncano.tensionTrack.APIRest.service;
 
 import com.guillermopalazoncano.tensionTrack.APIRest.model.Usuario;
+import com.guillermopalazoncano.tensionTrack.APIRest.dto.UsuarioRegistro;
 import java.util.List;
 
 /**
@@ -12,9 +13,10 @@ import java.util.List;
  * @author guillermopalazoncano
  */
 public interface IUsuarioService {
-    Usuario registrar (Usuario usuario);
-    Usuario modificar (Usuario usuario);
+    Usuario registrar (UsuarioRegistro usuario);
+    Usuario  modificar(Long idUsuario, String newPassword);
     List<Usuario> listar();
     Usuario obtener (Long id);
+    Usuario obtenerPorNombreUsuario(String username);
     boolean eliminar (Long id);
 }

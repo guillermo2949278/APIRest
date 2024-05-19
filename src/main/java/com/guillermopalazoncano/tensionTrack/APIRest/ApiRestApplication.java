@@ -1,22 +1,19 @@
 package com.guillermopalazoncano.tensionTrack.APIRest;
 
-import com.guillermopalazoncano.tensionTrack.APIRest.model.Usuario;
-import com.guillermopalazoncano.tensionTrack.APIRest.service.UsuarioService;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiRestApplication {
+public class ApiRestApplication{
 
-    @Autowired
-    UsuarioService usuService;
-    
     public static void main(String[] args)  {
+        Dotenv dotenv = Dotenv.load();
+        System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET"));
+        //System.out.println("jwt_secret: "+dotenv.get("JWT_SECRET"));
         SpringApplication.run(ApiRestApplication.class, args);
     }
-
+    
     /*
     @PostConstruct
     private void postConstruct(){

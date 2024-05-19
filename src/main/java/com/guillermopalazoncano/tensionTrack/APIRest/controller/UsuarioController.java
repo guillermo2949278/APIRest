@@ -5,6 +5,7 @@
 package com.guillermopalazoncano.tensionTrack.APIRest.controller;
 
 import com.guillermopalazoncano.tensionTrack.APIRest.model.Usuario;
+import com.guillermopalazoncano.tensionTrack.APIRest.dto.*;
 import com.guillermopalazoncano.tensionTrack.APIRest.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,29 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
  * @author guillermopalazoncano
  */
 @RestController
-@RequestMapping("/usuario")
 public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;
     
     @GetMapping("/id/{id}")
-    public ResponseEntity<Usuario> getUsuario(@PathVariable Long id){
+    public ResponseEntity<UsuarioRespuesta> getUsuario(@PathVariable Long id){
         Usuario usu = usuarioService.obtener(id);
         if (usu != null){
-            return new ResponseEntity<>(usu,HttpStatus.OK);            
+            return new ResponseEntity<>(UsuarioRespuesta.usuarioRespuestaDeUsuario(usu),HttpStatus.OK);            
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     
-    @PostMapping("/id")
-    public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario usu){
+    @PostMapping("/auth/registro")
+    public ResponseEntity<?> postUsuario(@RequestBody UsuarioRegistro usu){
         Usuario usuario = usuarioService.registrar(usu);
-        return new ResponseEntity<>(usuario,HttpStatus.CREATED);            
+        if (usuario!= null){
+            return new ResponseEntity<>(UsuarioRespuesta.usuarioRespuestaDeUsuario(usuario),HttpStatus.CREATED);            
+        } else {
+            return new ResponseEntity<>("Las contraseñas no coinciden", HttpStatus.BAD_REQUEST);
+        }
     }
     
     @PutMapping("/id/{id}")
-    public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario usu,
+    public ResponseEntity<UsuarioRespuesta> putPasswordUsuario(@RequestBody Usuario usu,
                                               @PathVariable Long id){
         
         Usuario usuario = usuarioService.obtener(id);
@@ -55,21 +59,21 @@ public class UsuarioController {
             if (usu.getUserId()!= null && usu.getUserId()!=id){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             } else {
-                usuario.setUsername(usu.getUsername());
                 usuario.setPassword(usu.getPassword());
-                usuario = usuarioService.modificar(usuario);
-                return new ResponseEntity<>(usuario, HttpStatus.OK);
+                usuario = usuarioService.modificar(id, usu.getPassword());
+                return new ResponseEntity<>(UsuarioRespuesta.usuarioRespuestaDeUsuario(usuario), HttpStatus.OK);
             }
         }
     }
     
     @DeleteMapping("/id/{id}")
-    public ResponseEntity<Usuario> deleteUsuario(@PathVariable Long id){
+    public ResponseEntity<String> deleteUsuario(@PathVariable Long id){
         Usuario usuario = usuarioService.obtener(id);
         if (usuario == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No se ha encontrado el usuario",HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            usuarioService.eliminar(id);
+            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.NO_CONTENT);
         }
     }
 }

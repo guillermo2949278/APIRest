@@ -7,8 +7,8 @@ package com.guillermopalazoncano.tensionTrack.APIRest.model;
 import jakarta.persistence.*;
 import java.util.Collection;
 import lombok.*;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -21,7 +21,7 @@ import lombok.*;
 @Builder
 @Data
 @Getter @Setter
-public class Usuario { // implements UserDetails {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +39,7 @@ public class Usuario { // implements UserDetails {
     }
     
     
-    /*
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -74,6 +74,6 @@ public class Usuario { // implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    */
+    
     
 }

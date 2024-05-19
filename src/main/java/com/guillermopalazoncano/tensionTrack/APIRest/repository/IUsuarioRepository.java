@@ -5,6 +5,7 @@
 package com.guillermopalazoncano.tensionTrack.APIRest.repository;
 
 import com.guillermopalazoncano.tensionTrack.APIRest.model.Usuario;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author guillermopalazoncano
  */
 public interface IUsuarioRepository extends JpaRepository<Usuario,Long> {
+    Optional<Usuario> findByUsername(String username);
 }
