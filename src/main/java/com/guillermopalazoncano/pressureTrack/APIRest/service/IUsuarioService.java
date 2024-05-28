@@ -19,4 +19,6 @@ public interface IUsuarioService {
     Usuario obtener (Long id);
     Usuario obtenerPorNombreUsuario(String username);
     boolean eliminar (Long id);
+    
+    boolean existsByUsername(String username);
 }

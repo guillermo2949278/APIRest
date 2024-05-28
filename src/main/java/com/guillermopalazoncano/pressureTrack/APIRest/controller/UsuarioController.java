@@ -25,12 +25,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -60,22 +58,12 @@ public class UsuarioController {
         return fechaActual();
     }
     
-    /* No recuperamos datos con id, ya que es en el login donde obtenemos los datos del mismo.
-    @GetMapping("/id/{id}")
-    public ResponseEntity<UsuarioRespuesta> getUsuario(@PathVariable Long id){
-        Usuario usu = usuarioService.obtener(id);
-        if (usu != null){
-            return new ResponseEntity<>(UsuarioRespuesta.usuarioRespuestaDeUsuario(usu),HttpStatus.OK);            
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    */
-    
     @PostMapping("/auth/registro")
-    public ResponseEntity<JwtUsuarioRespuesta> postUsuario(@RequestBody UsuarioCrear usu){
+    public ResponseEntity<?> postUsuario(@RequestBody UsuarioCrear usu){
         Usuario usuario = usuarioService.registrar(usu);
+        
         if (usuario!= null){
+            System.out.println("1");
             // Realizamos el proceso de login
             Authentication authentication = 
                 authenticationManager.authenticate(
@@ -98,9 +86,8 @@ public class UsuarioController {
              return ResponseEntity.status(HttpStatus.CREATED)
                .body(JwtUsuarioRespuesta.obtenerJwtUsuarioRespuesta(usuAutenticacion, token));
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error en el cambio de contraseña");
+            return new ResponseEntity<>("No se ha podido crear el usuario", HttpStatus.BAD_REQUEST);
         }
-        
     }
     
     @PostMapping("/auth/login")
@@ -130,7 +117,7 @@ public class UsuarioController {
     }
     
     @PutMapping("/usuario/cambioclave")
-    public ResponseEntity<UsuarioRespuesta> changePassword(@RequestBody 
+    public ResponseEntity<?> changePassword(@RequestBody 
             UsuarioCambioClave usuarioCambioClave,
             @AuthenticationPrincipal Usuario usuarioLogueado){
         
@@ -149,7 +136,7 @@ public class UsuarioController {
             }
                 
         } catch (RuntimeException ex){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error en el cambio de contraseña");
+            return new ResponseEntity<>("Error al cambiar la contraseña", HttpStatus.BAD_REQUEST);
         }
         return null;        
     }

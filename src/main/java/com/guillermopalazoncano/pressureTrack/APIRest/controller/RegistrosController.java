@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -43,14 +42,14 @@ public class RegistrosController {
     }
     
     @PostMapping("/")
-    public ResponseEntity<Registros> postRegistro(@AuthenticationPrincipal Usuario usuario,
+    public ResponseEntity<?> postRegistro(@AuthenticationPrincipal Usuario usuario,
                                                   @RequestBody RegistroCrear rc){
         Registros registro = registrosService.registrar(usuario.getUserId(), rc);
         if (registro != null){
             return ResponseEntity.status(HttpStatus.CREATED)
                .body(registro);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error al crear el registro");
+            return new ResponseEntity<>("Error al crear el registro", HttpStatus.BAD_REQUEST);
         }
     }
     

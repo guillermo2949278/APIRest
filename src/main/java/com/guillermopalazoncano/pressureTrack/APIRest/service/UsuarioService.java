@@ -30,10 +30,13 @@ public class UsuarioService implements IUsuarioService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    
+   
     @Override
     public Usuario registrar(UsuarioCrear usuarioRegistrar) {
+        // Compruebo si existe ya un usuario con ese Username (mail). Si existe devuelvo null
+        if (existsByUsername(usuarioRegistrar.getUsername())){
+            return null;
+        }
         if (usuarioRegistrar.getPassword().equals(usuarioRegistrar.getPasswordVerificacion())){
             Usuario usuario = new Usuario(usuarioRegistrar.getUsername(),
                                           passwordEncoder.encode(usuarioRegistrar.getPassword()));
@@ -90,4 +93,8 @@ public class UsuarioService implements IUsuarioService {
         return passwordEncoder.matches(claveClaro, usuario.getPassword());
     }
     
+    @Override
+    public boolean existsByUsername(String username) {
+        return iUsuarioRepository.existsByUsername(username);
+    }
 }
