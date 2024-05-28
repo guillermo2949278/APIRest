@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -91,29 +92,31 @@ public class UsuarioController {
     }
     
     @PostMapping("/auth/login")
-    public ResponseEntity<JwtUsuarioRespuesta> login(@RequestBody UsuarioLogin usuarioLogin){
-        
-        // Realizamos la autenticación
-        Authentication authentication = 
-                authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                        usuarioLogin.getUsername(),
-                        usuarioLogin.getPassword()                        
-                    )      
-                );        
-        // Una vez realizada la autenticación se guarda.
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        
-        // Debemos devolver el token creado para que pueda utilizarlo en otras peticiones
-        String token = jwtProvider.generateToken(authentication);
-        
-        // Obtenemos el usuario y con el token ya generamos la respuesta a devolver
-        Usuario usu = (Usuario) authentication.getPrincipal();
-        
-       return ResponseEntity.status(HttpStatus.CREATED)
-               .body(JwtUsuarioRespuesta.obtenerJwtUsuarioRespuesta(usu, token));
+    public ResponseEntity<?> login(@RequestBody UsuarioLogin usuarioLogin){
+        try {
+            // Realizamos la autenticación
+            Authentication authentication = 
+                    authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                            usuarioLogin.getUsername(),
+                            usuarioLogin.getPassword()                        
+                        )      
+                    );        
+            // Una vez realizada la autenticación se guarda.
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Debemos devolver el token creado para que pueda utilizarlo en otras peticiones
+            String token = jwtProvider.generateToken(authentication);
+
+            // Obtenemos el usuario y con el token ya generamos la respuesta a devolver
+            Usuario usu = (Usuario) authentication.getPrincipal();
+
+           return ResponseEntity.status(HttpStatus.CREATED)
+                   .body(JwtUsuarioRespuesta.obtenerJwtUsuarioRespuesta(usu, token));
   
-        
+        } catch (RuntimeException ex) {
+            return new ResponseEntity<>("Usuario y contraseña no coinciden", HttpStatus.BAD_REQUEST);
+        }
     }
     
     @PutMapping("/usuario/cambioclave")
