@@ -51,4 +51,9 @@ public class RegistrosService implements IRegistrosService {
             return false;
         }
     }
+
+    @Override
+    public List<Registros> obtenerPorFechas(LocalDateTime startDate, LocalDateTime endDate) {
+        return iRegistrosRepository.findRegistrosPorFechas(startDate, endDate);
+    }
 }

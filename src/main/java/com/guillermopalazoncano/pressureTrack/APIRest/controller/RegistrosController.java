@@ -4,6 +4,7 @@
  */
 package com.guillermopalazoncano.pressureTrack.APIRest.controller;
 
+import com.guillermopalazoncano.pressureTrack.APIRest.dto.RegistroConsultarFechas;
 import com.guillermopalazoncano.pressureTrack.APIRest.dto.RegistroCrear;
 import com.guillermopalazoncano.pressureTrack.APIRest.model.Registros;
 import com.guillermopalazoncano.pressureTrack.APIRest.model.Usuario;
@@ -70,6 +71,14 @@ public class RegistrosController {
                 return new ResponseEntity<>("El registro a borrar no pertenece al Usuario",HttpStatus.FORBIDDEN);
             }
         }
+    }
+    
+    @GetMapping("/periodo")
+    public ResponseEntity<List<Registros>> getRegistrosUsuarioPorFechas(@AuthenticationPrincipal Usuario usuario, 
+                                            @RequestBody RegistroConsultarFechas rcf) {
+        List<Registros> resultados = registrosService.obtenerPorFechas(rcf.getInicio(), rcf.getFin());
+        return new ResponseEntity<>(resultados, HttpStatus.OK);
+
     }
     
     

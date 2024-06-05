@@ -6,6 +6,7 @@ package com.guillermopalazoncano.pressureTrack.APIRest.service;
 
 import com.guillermopalazoncano.pressureTrack.APIRest.dto.RegistroCrear;
 import com.guillermopalazoncano.pressureTrack.APIRest.model.Registros;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -17,6 +18,6 @@ public interface IRegistrosService {
     Registros registrar (Long userId, RegistroCrear registro);
     Registros obtener (int id);
     boolean eliminar (int id);
-
+    List<Registros> obtenerPorFechas(LocalDateTime startDate, LocalDateTime endDate);
 
 }
