@@ -18,6 +18,6 @@ public interface IRegistrosService {
     Registros registrar (Long userId, RegistroCrear registro);
     Registros obtener (int id);
     boolean eliminar (int id);
-    List<Registros> obtenerPorFechas(LocalDateTime startDate, LocalDateTime endDate);
+    List<Registros> obtenerPorFechas(Long userId,LocalDateTime startDate, LocalDateTime endDate);
 
 }

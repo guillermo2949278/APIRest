@@ -76,7 +76,8 @@ public class RegistrosController {
     @GetMapping("/periodo")
     public ResponseEntity<List<Registros>> getRegistrosUsuarioPorFechas(@AuthenticationPrincipal Usuario usuario, 
                                             @RequestBody RegistroConsultarFechas rcf) {
-        List<Registros> resultados = registrosService.obtenerPorFechas(rcf.getInicio(), rcf.getFin());
+        List<Registros> resultados = registrosService.obtenerPorFechas(usuario.getUserId(),
+                                                rcf.getInicio(), rcf.getFin());
         return new ResponseEntity<>(resultados, HttpStatus.OK);
 
     }

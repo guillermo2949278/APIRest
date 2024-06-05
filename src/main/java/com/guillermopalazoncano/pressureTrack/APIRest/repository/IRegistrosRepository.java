@@ -19,7 +19,9 @@ public interface IRegistrosRepository extends JpaRepository<Registros,Long>  {
     @Query("SELECT r FROM Registros r WHERE r.userId = :userId")
     List<Registros> findByUserId(@Param("userId") long userId);
     
-    @Query("SELECT r FROM Registros r WHERE r.fechaHora BETWEEN :startDate AND :endDate")
-    List<Registros> findRegistrosPorFechas(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT r FROM Registros r WHERE r.userId = :userId And r.fechaHora BETWEEN :startDate AND :endDate")
+    List<Registros> findRegistrosPorFechas(@Param("userId") long userId,
+                                           @Param("startDate") LocalDateTime startDate, 
+                                           @Param("endDate") LocalDateTime endDate);
 
 }
